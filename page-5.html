@@ -38,6 +38,11 @@ div.expl {
   display: none;
   padding: 5px;
   margin: 10px;
+
+  box-shadow: 5px 5px #424949;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #424949;
 }
 
 input[type=checkbox] {
@@ -70,13 +75,14 @@ function submit(testNumber) {
     for (var i = 0; i < facit.length; i++) {
         var id = '' + testNumber + '-' + (i + 1);
         var x = document.getElementById('sx'+id).checked;
+        var se = document.getElementById('se'+id);
         if (facit[i] == x) {
             document.getElementById('s'+id).style.background = colorRight;
-            setDisplay(document.getElementById('se'+id), 'none');
+            setDisplay(se, 'none');
         }
         else {
             document.getElementById('s'+id).style.background = colorWrong;
-            setDisplay(document.getElementById('se'+id), 'block');
+            setDisplay(se, 'block');
         }       
         if (!facit[i]) {
             var stElem = document.getElementById('st'+id);
@@ -109,8 +115,7 @@ function submit(testNumber) {
 <p>This would not conform to the type of map.</p></div></div>
 <div id="s1-2" class="stmt">
 <input id="sx1-2" type="checkbox" class="cb"></input>
-<span id="st1-2" class="st">map (f) (Nil) = Nil</span>
-<div id="se1-2" class="expl"></div></div>
+<span id="st1-2" class="st">map (f) (Nil) = Nil</span></div>
 <button onclick="submit(1)">Submit</button></div>
 <p>What would be a reasonable definition for the Cons case?</p>
 <div class="test">
@@ -126,8 +131,7 @@ function submit(testNumber) {
 <p>This would not type check.</p></div></div>
 <div id="s2-3" class="stmt">
 <input id="sx2-3" type="checkbox" class="cb"></input>
-<span id="st2-3" class="st">map (f) (Cons x xs) = Cons f(x) (map (f) (xs))</span>
-<div id="se2-3" class="expl"></div></div>
+<span id="st2-3" class="st">map (f) (Cons x xs) = Cons f(x) (map (f) (xs))</span></div>
 <div id="s2-4" class="stmt">
 <input id="sx2-4" type="checkbox" class="cb"></input>
 <span id="st2-4" class="st">map (f) (Cons x xs) = Cons x (map (f) (xs))</span>
@@ -152,34 +156,28 @@ function submit(testNumber) {
 <p>Now to define the `find` function.</p>
 <p>What would be a reasonable definition for the Nil case?</p>
 <div class="test">
-<div id="s5-1" class="stmt">
-<input id="sx5-1" type="checkbox" class="cb"></input>
-<span id="st5-1" class="st">find (p) (Nil) = Nil</span>
-<div id="se5-1" class="expl"></div></div>
-<div id="s5-2" class="stmt">
-<input id="sx5-2" type="checkbox" class="cb"></input>
-<span id="st5-2" class="st">find (p) (Nil) = None</span>
-<div id="se5-2" class="expl"></div></div>
-<div id="s5-3" class="stmt">
-<input id="sx5-3" type="checkbox" class="cb"></input>
-<span id="st5-3" class="st">find (p) (Nil) = Some p</span>
-<div id="se5-3" class="expl"></div></div>
-<button onclick="submit(5)">Submit</button></div>
+<div id="s3-1" class="stmt">
+<input id="sx3-1" type="checkbox" class="cb"></input>
+<span id="st3-1" class="st">find (p) (Nil) = Nil</span></div>
+<div id="s3-2" class="stmt">
+<input id="sx3-2" type="checkbox" class="cb"></input>
+<span id="st3-2" class="st">find (p) (Nil) = None</span></div>
+<div id="s3-3" class="stmt">
+<input id="sx3-3" type="checkbox" class="cb"></input>
+<span id="st3-3" class="st">find (p) (Nil) = Some p</span></div>
+<button onclick="submit(3)">Submit</button></div>
 <p>What would be a reasonable definition for the Cons case?</p>
 <div class="test">
-<div id="s6-1" class="stmt">
-<input id="sx6-1" type="checkbox" class="cb"></input>
-<span id="st6-1" class="st">find (p) (Cons x xs) = if p(x) then Some x else None</span>
-<div id="se6-1" class="expl"></div></div>
-<div id="s6-2" class="stmt">
-<input id="sx6-2" type="checkbox" class="cb"></input>
-<span id="st6-2" class="st">find (p) (Cons x xs) = if p(x) then Some x else find (p) (xs)</span>
-<div id="se6-2" class="expl"></div></div>
-<div id="s6-3" class="stmt">
-<input id="sx6-3" type="checkbox" class="cb"></input>
-<span id="st6-3" class="st">find (p) (Cons x xs) = if p(x) then None else find (p) (xs)</span>
-<div id="se6-3" class="expl"></div></div>
-<button onclick="submit(6)">Submit</button></div>
+<div id="s4-1" class="stmt">
+<input id="sx4-1" type="checkbox" class="cb"></input>
+<span id="st4-1" class="st">find (p) (Cons x xs) = if p(x) then Some x else None</span></div>
+<div id="s4-2" class="stmt">
+<input id="sx4-2" type="checkbox" class="cb"></input>
+<span id="st4-2" class="st">find (p) (Cons x xs) = if p(x) then Some x else find (p) (xs)</span></div>
+<div id="s4-3" class="stmt">
+<input id="sx4-3" type="checkbox" class="cb"></input>
+<span id="st4-3" class="st">find (p) (Cons x xs) = if p(x) then None else find (p) (xs)</span></div>
+<button onclick="submit(4)">Submit</button></div>
 <p>The same technique can be used for other functions, such as a function to get the first element of a list:</p>
 <pre>getFirst : List a -> a</pre>
 <p>This type looks fine, but again it would be difficult to define it for the Nil case:</p>
@@ -191,8 +189,7 @@ function submit(testNumber) {
 <pre>getFirst (Nil)       = None</pre>
 <p>What statements are true?</p>
 <div class="test">
-<div id="s7-1" class="stmt">
-<input id="sx7-1" type="checkbox" class="cb"></input>
-<span id="st7-1" class="st">find (p) == filter (p) >>> getFirst</span>
-<div id="se7-1" class="expl"></div></div>
-<button onclick="submit(7)">Submit</button></div></div></body></html>
+<div id="s5-1" class="stmt">
+<input id="sx5-1" type="checkbox" class="cb"></input>
+<span id="st5-1" class="st">find (p) == filter (p) >>> getFirst</span></div>
+<button onclick="submit(5)">Submit</button></div></div></body></html>

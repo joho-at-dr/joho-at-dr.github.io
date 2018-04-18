@@ -38,6 +38,11 @@ div.expl {
   display: none;
   padding: 5px;
   margin: 10px;
+
+  box-shadow: 5px 5px #424949;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #424949;
 }
 
 input[type=checkbox] {
@@ -70,13 +75,14 @@ function submit(testNumber) {
     for (var i = 0; i < facit.length; i++) {
         var id = '' + testNumber + '-' + (i + 1);
         var x = document.getElementById('sx'+id).checked;
+        var se = document.getElementById('se'+id);
         if (facit[i] == x) {
             document.getElementById('s'+id).style.background = colorRight;
-            setDisplay(document.getElementById('se'+id), 'none');
+            setDisplay(se, 'none');
         }
         else {
             document.getElementById('s'+id).style.background = colorWrong;
-            setDisplay(document.getElementById('se'+id), 'block');
+            setDisplay(se, 'block');
         }       
         if (!facit[i]) {
             var stElem = document.getElementById('st'+id);
@@ -104,12 +110,10 @@ function submit(testNumber) {
 <div class="test">
 <div id="s1-1" class="stmt">
 <input id="sx1-1" type="checkbox" class="cb"></input>
-<span id="st1-1" class="st">compose : (a -> b) -> (b -> c) -> (a -> c)</span>
-<div id="se1-1" class="expl"></div></div>
+<span id="st1-1" class="st">compose : (a -> b) -> (b -> c) -> (a -> c)</span></div>
 <div id="s1-2" class="stmt">
 <input id="sx1-2" type="checkbox" class="cb"></input>
-<span id="st1-2" class="st">compose : a -> b -> c</span>
-<div id="se1-2" class="expl"></div></div>
+<span id="st1-2" class="st">compose : a -> b -> c</span></div>
 <button onclick="submit(1)">Submit</button></div>
 <p>Rather than `compose` I will write it as an operator to emphasize that it is left to right function composition, like so:</p>
 <pre>f >>> g  ==  \x -> g(f(x))</pre>

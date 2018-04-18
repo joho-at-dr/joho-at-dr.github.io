@@ -38,6 +38,11 @@ div.expl {
   display: none;
   padding: 5px;
   margin: 10px;
+
+  box-shadow: 5px 5px #424949;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #424949;
 }
 
 input[type=checkbox] {
@@ -70,13 +75,14 @@ function submit(testNumber) {
     for (var i = 0; i < facit.length; i++) {
         var id = '' + testNumber + '-' + (i + 1);
         var x = document.getElementById('sx'+id).checked;
+        var se = document.getElementById('se'+id);
         if (facit[i] == x) {
             document.getElementById('s'+id).style.background = colorRight;
-            setDisplay(document.getElementById('se'+id), 'none');
+            setDisplay(se, 'none');
         }
         else {
             document.getElementById('s'+id).style.background = colorWrong;
-            setDisplay(document.getElementById('se'+id), 'block');
+            setDisplay(se, 'block');
         }       
         if (!facit[i]) {
             var stElem = document.getElementById('st'+id);
@@ -103,12 +109,10 @@ function submit(testNumber) {
 <div class="test">
 <div id="s1-1" class="stmt">
 <input id="sx1-1" type="checkbox" class="cb"></input>
-<span id="st1-1" class="st">id(1) == 1</span>
-<div id="se1-1" class="expl"></div></div>
+<span id="st1-1" class="st">id(1) == 1</span></div>
 <div id="s1-2" class="stmt">
 <input id="sx1-2" type="checkbox" class="cb"></input>
-<span id="st1-2" class="st">id("Hello") == "Hello"</span>
-<div id="se1-2" class="expl"></div></div>
+<span id="st1-2" class="st">id("Hello") == "Hello"</span></div>
 <div id="s1-3" class="stmt">
 <input id="sx1-3" type="checkbox" class="cb"></input>
 <span id="st1-3" class="st">id(x) == x</span>
@@ -139,8 +143,7 @@ function submit(testNumber) {
 <div class="test">
 <div id="s3-1" class="stmt">
 <input id="sx3-1" type="checkbox" class="cb"></input>
-<span id="st3-1" class="st">id(x) == id(x)</span>
-<div id="se3-1" class="expl"></div></div>
+<span id="st3-1" class="st">id(x) == id(x)</span></div>
 <div id="s3-2" class="stmt">
 <input id="sx3-2" type="checkbox" class="cb"></input>
 <span id="st3-2" class="st">id == id</span>
