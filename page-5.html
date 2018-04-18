@@ -1,0 +1,198 @@
+
+<html>
+<head>
+<style>body {
+    background-color: #85C1E9;
+}
+
+div.doc {
+    border-style: solid;
+    border-width: 1px;
+    border-color: #424949;
+    padding: 20px;
+    margin: 20px;
+    background-color: white;
+}
+
+p {
+    max-width: 70ex;
+}
+
+h1, h2, h3 {
+    color: #424949;
+}
+
+.stmt {
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+  padding: 5px;
+}
+
+.st {
+    font-family: monospace;
+}
+
+div.expl {
+  background-color: white;
+  display: none;
+  padding: 5px;
+  margin: 10px;
+}
+
+input[type=checkbox] {
+  transform: scale(1.5);
+}
+
+.cb {
+  float: left;
+  margin-right: 1em;
+}
+
+p.next {
+    text-align: right;
+    max-width: 100%;
+}
+
+</style>
+<script>var allTestFacits = [[false,true],[false,false,true,false],[false,true,false],[false,true,false],[true]];
+// allTestFacits will be added by program.
+
+var colorRight = '#2ECC71';
+var colorWrong = '#E74C3C';
+
+function setDisplay(el,value) {
+    if (el != null) el.style.display = value;
+}
+
+function submit(testNumber) {
+    var facit = allTestFacits[testNumber-1];
+    for (var i = 0; i < facit.length; i++) {
+        var id = '' + testNumber + '-' + (i + 1);
+        var x = document.getElementById('sx'+id).checked;
+        if (facit[i] == x) {
+            document.getElementById('s'+id).style.background = colorRight;
+            setDisplay(document.getElementById('se'+id), 'none');
+        }
+        else {
+            document.getElementById('s'+id).style.background = colorWrong;
+            setDisplay(document.getElementById('se'+id), 'block');
+        }       
+        if (!facit[i]) {
+            var stElem = document.getElementById('st'+id);
+            stElem.style.textDecoration = 'line-through';
+//            stElem.style.color = 'grey';
+        }
+    }
+}
+
+</script></head>
+<body>
+<div class="doc">
+<h1>Data Types</h1>
+<p>Although data types can be encoded as functions, it will can often be clearer to have a separate language to describe data structures. I'll use a syntax similar to many functional languages.</p>
+<h1>List</h1>
+<p>Let's start with the List type. A list be encoded with two cases; it can be empty (Nil) or it can be an element followed by another list (Cons):</p>
+<pre>type List a = Nil
+            | Cons a (List a)</pre>
+<p>The List type is parameterised by the element type `a`.</p>
+<p>Let's define the `map` function by defining it by pattern matching on the two cases.</p>
+<pre>map : (a -> b) -> List a -> List b</pre>
+<pre>map (f) (Nil)       = ???</pre>
+<pre>map (f) (Cons x xs) = ???</pre>
+<p>What would be a reasonable definition for the Nil case?</p>
+<div class="test">
+<div id="s1-1" class="stmt">
+<input id="sx1-1" type="checkbox" class="cb"></input>
+<span id="st1-1" class="st">map (f) (Nil) = f</span>
+<div id="se1-1" class="expl">
+<p>This would not conform to the type of map.</p></div></div>
+<div id="s1-2" class="stmt">
+<input id="sx1-2" type="checkbox" class="cb"></input>
+<span id="st1-2" class="st">map (f) (Nil) = Nil</span>
+<div id="se1-2" class="expl"></div></div>
+<button onclick="submit(1)">Submit</button></div>
+<p>What would be a reasonable definition for the Cons case?</p>
+<div class="test">
+<div id="s2-1" class="stmt">
+<input id="sx2-1" type="checkbox" class="cb"></input>
+<span id="st2-1" class="st">map (f) (Cons x xs) = Nil</span>
+<div id="se2-1" class="expl">
+<p>This would break the law that `map(id) == id`.</p></div></div>
+<div id="s2-2" class="stmt">
+<input id="sx2-2" type="checkbox" class="cb"></input>
+<span id="st2-2" class="st">map (f) (Cons x xs) = Cons f(x) xs</span>
+<div id="se2-2" class="expl">
+<p>This would not type check.</p></div></div>
+<div id="s2-3" class="stmt">
+<input id="sx2-3" type="checkbox" class="cb"></input>
+<span id="st2-3" class="st">map (f) (Cons x xs) = Cons f(x) (map (f) (xs))</span>
+<div id="se2-3" class="expl"></div></div>
+<div id="s2-4" class="stmt">
+<input id="sx2-4" type="checkbox" class="cb"></input>
+<span id="st2-4" class="st">map (f) (Cons x xs) = Cons x (map (f) (xs))</span>
+<div id="se2-4" class="expl">
+<p>The would make the type of `map` be `(a -> b) -> List a -> List a`.</p></div></div>
+<button onclick="submit(2)">Submit</button></div>
+<p>Let's define the `filter` function, by implementing the two cases:</p>
+<pre>filter : (a -> Boolean) -> List a -> List a</pre>
+<pre>filter (p) (Nil) = Nil</pre>
+<pre>filter (p) (Cons x xs) = if p(x) then Cons x (filter (p) (xs)) else filter (p) (xs)</pre>
+<p>Let's define a function `find` for finding the first occurence of an element in a list, satisfying a given predicate:</p>
+<pre>find : (a -> Boolean) -> List a -> a</pre>
+<p>This looks fine, but consider what would happen if we try to define this for the `Nil` case:</p>
+<pre>find (p) (Nil) = ???</pre>
+<p>What can we return? According to the type, we have to return some element, but we don't have access to any element in this case. Some languages provide a null value for all types, but that is generally considered a mistake. We cannot provide a default value either, since we don't know what type the value should have (the element type is unknown).</p>
+<h1>Maybe</h1>
+<p>A nice way represent possibly missing values, is to provide a type that can hold one or zero values. Let's call it `Maybe`:</p>
+<pre>type Maybe a = None | Some a</pre>
+<p>This type has two cases; `None` for no value and `Some` for one value.</p>
+<p>We can use this type for the `find` function to signal that it may return no value:</p>
+<pre>find : (a -> Boolean) -> List a -> Maybe a</pre>
+<p>Now to define the `find` function.</p>
+<p>What would be a reasonable definition for the Nil case?</p>
+<div class="test">
+<div id="s5-1" class="stmt">
+<input id="sx5-1" type="checkbox" class="cb"></input>
+<span id="st5-1" class="st">find (p) (Nil) = Nil</span>
+<div id="se5-1" class="expl"></div></div>
+<div id="s5-2" class="stmt">
+<input id="sx5-2" type="checkbox" class="cb"></input>
+<span id="st5-2" class="st">find (p) (Nil) = None</span>
+<div id="se5-2" class="expl"></div></div>
+<div id="s5-3" class="stmt">
+<input id="sx5-3" type="checkbox" class="cb"></input>
+<span id="st5-3" class="st">find (p) (Nil) = Some p</span>
+<div id="se5-3" class="expl"></div></div>
+<button onclick="submit(5)">Submit</button></div>
+<p>What would be a reasonable definition for the Cons case?</p>
+<div class="test">
+<div id="s6-1" class="stmt">
+<input id="sx6-1" type="checkbox" class="cb"></input>
+<span id="st6-1" class="st">find (p) (Cons x xs) = if p(x) then Some x else None</span>
+<div id="se6-1" class="expl"></div></div>
+<div id="s6-2" class="stmt">
+<input id="sx6-2" type="checkbox" class="cb"></input>
+<span id="st6-2" class="st">find (p) (Cons x xs) = if p(x) then Some x else find (p) (xs)</span>
+<div id="se6-2" class="expl"></div></div>
+<div id="s6-3" class="stmt">
+<input id="sx6-3" type="checkbox" class="cb"></input>
+<span id="st6-3" class="st">find (p) (Cons x xs) = if p(x) then None else find (p) (xs)</span>
+<div id="se6-3" class="expl"></div></div>
+<button onclick="submit(6)">Submit</button></div>
+<p>The same technique can be used for other functions, such as a function to get the first element of a list:</p>
+<pre>getFirst : List a -> a</pre>
+<p>This type looks fine, but again it would be difficult to define it for the Nil case:</p>
+<pre>getFirst (Cons x xs) = x</pre>
+<pre>getFirst (Nil)       = ???</pre>
+<p>The `Maybe` type to the resque:</p>
+<pre>getFirst : List a -> Maybe a</pre>
+<pre>getFirst (Cons x xs) = Some x</pre>
+<pre>getFirst (Nil)       = None</pre>
+<p>What statements are true?</p>
+<div class="test">
+<div id="s7-1" class="stmt">
+<input id="sx7-1" type="checkbox" class="cb"></input>
+<span id="st7-1" class="st">find (p) == filter (p) >>> getFirst</span>
+<div id="se7-1" class="expl"></div></div>
+<button onclick="submit(7)">Submit</button></div></div></body></html>

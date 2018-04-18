@@ -1,0 +1,151 @@
+
+<html>
+<head>
+<style>body {
+    background-color: #85C1E9;
+}
+
+div.doc {
+    border-style: solid;
+    border-width: 1px;
+    border-color: #424949;
+    padding: 20px;
+    margin: 20px;
+    background-color: white;
+}
+
+p {
+    max-width: 70ex;
+}
+
+h1, h2, h3 {
+    color: #424949;
+}
+
+.stmt {
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+  padding: 5px;
+}
+
+.st {
+    font-family: monospace;
+}
+
+div.expl {
+  background-color: white;
+  display: none;
+  padding: 5px;
+  margin: 10px;
+}
+
+input[type=checkbox] {
+  transform: scale(1.5);
+}
+
+.cb {
+  float: left;
+  margin-right: 1em;
+}
+
+p.next {
+    text-align: right;
+    max-width: 100%;
+}
+
+</style>
+<script>var allTestFacits = [[false,false,false,true],[false,true,false,false]];
+// allTestFacits will be added by program.
+
+var colorRight = '#2ECC71';
+var colorWrong = '#E74C3C';
+
+function setDisplay(el,value) {
+    if (el != null) el.style.display = value;
+}
+
+function submit(testNumber) {
+    var facit = allTestFacits[testNumber-1];
+    for (var i = 0; i < facit.length; i++) {
+        var id = '' + testNumber + '-' + (i + 1);
+        var x = document.getElementById('sx'+id).checked;
+        if (facit[i] == x) {
+            document.getElementById('s'+id).style.background = colorRight;
+            setDisplay(document.getElementById('se'+id), 'none');
+        }
+        else {
+            document.getElementById('s'+id).style.background = colorWrong;
+            setDisplay(document.getElementById('se'+id), 'block');
+        }       
+        if (!facit[i]) {
+            var stElem = document.getElementById('st'+id);
+            stElem.style.textDecoration = 'line-through';
+//            stElem.style.color = 'grey';
+        }
+    }
+}
+
+</script></head>
+<body>
+<div class="doc">
+<h1>A comparison to imperative code</h1>
+<p>Consider the following code, written in fairly typical imperative style:</p>
+<pre>function foo(xs: List(a)) {
+   var result = new List();
+   for (var i = 0; i < xs.length; i++) {
+      var x = f(xs[i]);
+      if (p(x)) result.append(x);
+   }
+   return result;
+}</pre>
+<p>Which of the following definitions correspond to the above?</p>
+<div class="test">
+<div id="s1-1" class="stmt">
+<input id="sx1-1" type="checkbox" class="cb"></input>
+<span id="st1-1" class="st">foo = filter(p)</span>
+<div id="se1-1" class="expl"></div></div>
+<div id="s1-2" class="stmt">
+<input id="sx1-2" type="checkbox" class="cb"></input>
+<span id="st1-2" class="st">foo = filter(p) >>> map(f)</span>
+<div id="se1-2" class="expl"></div></div>
+<div id="s1-3" class="stmt">
+<input id="sx1-3" type="checkbox" class="cb"></input>
+<span id="st1-3" class="st">foo = map(p) >>> filter(f)</span>
+<div id="se1-3" class="expl"></div></div>
+<div id="s1-4" class="stmt">
+<input id="sx1-4" type="checkbox" class="cb"></input>
+<span id="st1-4" class="st">foo = map(f) >>> filter(p)</span>
+<div id="se1-4" class="expl"></div></div>
+<button onclick="submit(1)">Submit</button></div>
+<p>Now consider the following imperative code:</p>
+<pre>function foo(xs: List(a)) {
+   var result = new List();
+   for (var i = 0; i < xs.length; i++) {
+      var x = xs[i];
+      if (p(x)) result.append(f(x));
+   }
+   return result;
+}</pre>
+<p>Can you spot the change? What does it correspond to now?</p>
+<div class="test">
+<div id="s2-1" class="stmt">
+<input id="sx2-1" type="checkbox" class="cb"></input>
+<span id="st2-1" class="st">foo = filter(p)</span>
+<div id="se2-1" class="expl"></div></div>
+<div id="s2-2" class="stmt">
+<input id="sx2-2" type="checkbox" class="cb"></input>
+<span id="st2-2" class="st">foo = filter(p) >>> map(f)</span>
+<div id="se2-2" class="expl"></div></div>
+<div id="s2-3" class="stmt">
+<input id="sx2-3" type="checkbox" class="cb"></input>
+<span id="st2-3" class="st">foo = map(p) >>> filter(f)</span>
+<div id="se2-3" class="expl"></div></div>
+<div id="s2-4" class="stmt">
+<input id="sx2-4" type="checkbox" class="cb"></input>
+<span id="st2-4" class="st">foo = map(f) >>> filter(p)</span>
+<div id="se2-4" class="expl"></div></div>
+<button onclick="submit(2)">Submit</button></div>
+<p>The idea here is to highlight the differences in readability. One can argue that the comparison is unfair, since we could as well have defined `map` and `filter` functions separately in the imperative case as well. But then, using them would have been to use functional programming.</p></div>
+<p class="next">
+<a href="page-5.html">Next</a></p></body></html>

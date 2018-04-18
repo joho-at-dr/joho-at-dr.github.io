@@ -1,0 +1,148 @@
+
+<html>
+<head>
+<style>body {
+    background-color: #85C1E9;
+}
+
+div.doc {
+    border-style: solid;
+    border-width: 1px;
+    border-color: #424949;
+    padding: 20px;
+    margin: 20px;
+    background-color: white;
+}
+
+p {
+    max-width: 70ex;
+}
+
+h1, h2, h3 {
+    color: #424949;
+}
+
+.stmt {
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+  padding: 5px;
+}
+
+.st {
+    font-family: monospace;
+}
+
+div.expl {
+  background-color: white;
+  display: none;
+  padding: 5px;
+  margin: 10px;
+}
+
+input[type=checkbox] {
+  transform: scale(1.5);
+}
+
+.cb {
+  float: left;
+  margin-right: 1em;
+}
+
+p.next {
+    text-align: right;
+    max-width: 100%;
+}
+
+</style>
+<script>var allTestFacits = [[true,false],[true,false,true]];
+// allTestFacits will be added by program.
+
+var colorRight = '#2ECC71';
+var colorWrong = '#E74C3C';
+
+function setDisplay(el,value) {
+    if (el != null) el.style.display = value;
+}
+
+function submit(testNumber) {
+    var facit = allTestFacits[testNumber-1];
+    for (var i = 0; i < facit.length; i++) {
+        var id = '' + testNumber + '-' + (i + 1);
+        var x = document.getElementById('sx'+id).checked;
+        if (facit[i] == x) {
+            document.getElementById('s'+id).style.background = colorRight;
+            setDisplay(document.getElementById('se'+id), 'none');
+        }
+        else {
+            document.getElementById('s'+id).style.background = colorWrong;
+            setDisplay(document.getElementById('se'+id), 'block');
+        }       
+        if (!facit[i]) {
+            var stElem = document.getElementById('st'+id);
+            stElem.style.textDecoration = 'line-through';
+//            stElem.style.color = 'grey';
+        }
+    }
+}
+
+</script></head>
+<body>
+<div class="doc">
+<h1>The map function</h1>
+<p>You are probably already familiar with the `map` function; it takes a function and collection of values and applies the function to every value, producing a new collection. We can write its type like so:</p>
+<pre>map : (a -> b) -> List a -> List b</pre>
+<p>In this case, its been limited to map over lists, which are parameterised over the element type. Remember, `a` and `b` are type variables (beginning with small letters), while `List` is an actual type.</p>
+<p>Example:</p>
+<pre>map(f)([1,2,3]) == [f(1),f(2),f(3)]</pre>
+<p>One can also see `map` as a function that lifts a function into the domain of lists; it takes a function from `a` to `b` and returns it lifted to from `List a` to `List b`:</p>
+<pre>map : (a -> b) -> (List a -> List b)</pre>
+<h1>Function composition</h1>
+<p>We can define a function to combine two functions:</p>
+<pre>compose = \f -> \g -> \x -> g(f(x))</pre>
+<p>What will the type of `compose` be, given the above definition?</p>
+<div class="test">
+<div id="s1-1" class="stmt">
+<input id="sx1-1" type="checkbox" class="cb"></input>
+<span id="st1-1" class="st">compose : (a -> b) -> (b -> c) -> (a -> c)</span>
+<div id="se1-1" class="expl"></div></div>
+<div id="s1-2" class="stmt">
+<input id="sx1-2" type="checkbox" class="cb"></input>
+<span id="st1-2" class="st">compose : a -> b -> c</span>
+<div id="se1-2" class="expl"></div></div>
+<button onclick="submit(1)">Submit</button></div>
+<p>Rather than `compose` I will write it as an operator to emphasize that it is left to right function composition, like so:</p>
+<pre>f >>> g  ==  \x -> g(f(x))</pre>
+<h1>Some laws for map</h1>
+<p>I have not provided a defintion for `map`, only its type signature. But the signature already tells a lot, and by adding some laws that must hold for it, we can narrow down its semantics even more. Here are the laws:</p>
+<pre>map(id) == id
+map(f >>> g) == map(f) >>> map(g)</pre>
+<p>This is in fact enough information that the correct definition can be derived automatically!</p>
+<p>Let's say that we define `map` so that it produces every result element twice, for example:</p>
+<pre>map(f)([1,2]) == [f(1),f(1),f(2),f(2)]</pre>
+<p>Which laws would such a definition still satisfy?</p>
+<div class="test">
+<div id="s2-1" class="stmt">
+<input id="sx2-1" type="checkbox" class="cb"></input>
+<span id="st2-1" class="st">map : (a -> b) -> List a -> List b</span>
+<div id="se2-1" class="expl">
+<p>The type contract would still be satisfied, since the function is applied to every element, to produce a list of `b`s.</p></div></div>
+<div id="s2-2" class="stmt">
+<input id="sx2-2" type="checkbox" class="cb"></input>
+<span id="st2-2" class="st">map(id) == id</span>
+<div id="se2-2" class="expl">
+<p>This law would not be satisfied, since we would get for example:</p>
+<pre>map(id)([1,2]) == [1,1,2,2]</pre></div></div>
+<div id="s2-3" class="stmt">
+<input id="sx2-3" type="checkbox" class="cb"></input>
+<span id="st2-3" class="st">map(f >>> g) == map(f) >>> map(g)</span>
+<div id="se2-3" class="expl">
+<p>This would still be satisfied by the bad definition.</p>
+<pre>map(f >>> g)([1,2]) == [g(f(1)), g(f(1)), g(f(2)), g(f(2))]</pre>
+<p>and</p>
+<pre>(map(f) >>> map(g)) ([1,2])
+   == (map(g)) ([f(1),f(1),f(2),f(2)])
+   == [g(f(1)), g(f(1)), g(f(2)), g(f(2))]</pre></div></div>
+<button onclick="submit(2)">Submit</button></div></div>
+<p class="next">
+<a href="page-3.html">Next</a></p></body></html>

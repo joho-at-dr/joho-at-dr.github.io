@@ -1,0 +1,123 @@
+
+<html>
+<head>
+<style>body {
+    background-color: #85C1E9;
+}
+
+div.doc {
+    border-style: solid;
+    border-width: 1px;
+    border-color: #424949;
+    padding: 20px;
+    margin: 20px;
+    background-color: white;
+}
+
+p {
+    max-width: 70ex;
+}
+
+h1, h2, h3 {
+    color: #424949;
+}
+
+.stmt {
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+  padding: 5px;
+}
+
+.st {
+    font-family: monospace;
+}
+
+div.expl {
+  background-color: white;
+  display: none;
+  padding: 5px;
+  margin: 10px;
+}
+
+input[type=checkbox] {
+  transform: scale(1.5);
+}
+
+.cb {
+  float: left;
+  margin-right: 1em;
+}
+
+p.next {
+    text-align: right;
+    max-width: 100%;
+}
+
+</style>
+<script>var allTestFacits = [[true,true,false]];
+// allTestFacits will be added by program.
+
+var colorRight = '#2ECC71';
+var colorWrong = '#E74C3C';
+
+function setDisplay(el,value) {
+    if (el != null) el.style.display = value;
+}
+
+function submit(testNumber) {
+    var facit = allTestFacits[testNumber-1];
+    for (var i = 0; i < facit.length; i++) {
+        var id = '' + testNumber + '-' + (i + 1);
+        var x = document.getElementById('sx'+id).checked;
+        if (facit[i] == x) {
+            document.getElementById('s'+id).style.background = colorRight;
+            setDisplay(document.getElementById('se'+id), 'none');
+        }
+        else {
+            document.getElementById('s'+id).style.background = colorWrong;
+            setDisplay(document.getElementById('se'+id), 'block');
+        }       
+        if (!facit[i]) {
+            var stElem = document.getElementById('st'+id);
+            stElem.style.textDecoration = 'line-through';
+//            stElem.style.color = 'grey';
+        }
+    }
+}
+
+</script></head>
+<body>
+<div class="doc">
+<h1>const</h1>
+<p>A function that may look weird is const:</p>
+<pre>const : a -> b -> a</pre>
+<p>It takes two values and returns the first (while ignoring the second).</p>
+<pre>const(1)(2) == 1
+const(x)(y) == x</pre>
+<p>It may seem pointless, but can be useful in combination with other functions.</p>
+<h1>Filter</h1>
+<p>The `filter` function may not need much introduction:</p>
+<pre>filter : (a -> Boolean) -> List a -> List a</pre>
+<p>It filters a list of values by returning the elements for which the given predicate function returns true. Examples:</p>
+<pre>filter(isOdd) ([1,2,3,4]) == [1,3]</pre>
+<pre>filter(isEven) ([1,2,3,4]) == [2,4]</pre>
+<h2>What statements should be true?</h2>
+<div class="test">
+<div id="s1-1" class="stmt">
+<input id="sx1-1" type="checkbox" class="cb"></input>
+<span id="st1-1" class="st">filter(const(false)) == const([])</span>
+<div id="se1-1" class="expl"></div></div>
+<div id="s1-2" class="stmt">
+<input id="sx1-2" type="checkbox" class="cb"></input>
+<span id="st1-2" class="st">filter(const(true)) == id</span>
+<div id="se1-2" class="expl"></div></div>
+<div id="s1-3" class="stmt">
+<input id="sx1-3" type="checkbox" class="cb"></input>
+<span id="st1-3" class="st">filter(id) : List a -> List a</span>
+<div id="se1-3" class="expl">
+<p>Since `id` has type `a -> a` and the predicate function of `filter` must return a Boolean, the input list must be of type `List Boolean`. This will also be true for the output list. So:</p>
+<pre>filter(id) : List Boolean -> List Boolean</pre></div></div>
+<button onclick="submit(1)">Submit</button></div></div>
+<p class="next">
+<a href="page-4.html">Next</a></p></body></html>

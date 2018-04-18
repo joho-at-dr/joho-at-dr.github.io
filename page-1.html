@@ -1,0 +1,161 @@
+
+<html>
+<head>
+<style>body {
+    background-color: #85C1E9;
+}
+
+div.doc {
+    border-style: solid;
+    border-width: 1px;
+    border-color: #424949;
+    padding: 20px;
+    margin: 20px;
+    background-color: white;
+}
+
+p {
+    max-width: 70ex;
+}
+
+h1, h2, h3 {
+    color: #424949;
+}
+
+.stmt {
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+  padding: 5px;
+}
+
+.st {
+    font-family: monospace;
+}
+
+div.expl {
+  background-color: white;
+  display: none;
+  padding: 5px;
+  margin: 10px;
+}
+
+input[type=checkbox] {
+  transform: scale(1.5);
+}
+
+.cb {
+  float: left;
+  margin-right: 1em;
+}
+
+p.next {
+    text-align: right;
+    max-width: 100%;
+}
+
+</style>
+<script>var allTestFacits = [[true,true,true],[true,false],[true,true,false,true]];
+// allTestFacits will be added by program.
+
+var colorRight = '#2ECC71';
+var colorWrong = '#E74C3C';
+
+function setDisplay(el,value) {
+    if (el != null) el.style.display = value;
+}
+
+function submit(testNumber) {
+    var facit = allTestFacits[testNumber-1];
+    for (var i = 0; i < facit.length; i++) {
+        var id = '' + testNumber + '-' + (i + 1);
+        var x = document.getElementById('sx'+id).checked;
+        if (facit[i] == x) {
+            document.getElementById('s'+id).style.background = colorRight;
+            setDisplay(document.getElementById('se'+id), 'none');
+        }
+        else {
+            document.getElementById('s'+id).style.background = colorWrong;
+            setDisplay(document.getElementById('se'+id), 'block');
+        }       
+        if (!facit[i]) {
+            var stElem = document.getElementById('st'+id);
+            stElem.style.textDecoration = 'line-through';
+//            stElem.style.color = 'grey';
+        }
+    }
+}
+
+</script></head>
+<body>
+<div class="doc">
+<h1>Functional Programming</h1>
+<p>Functional programming simplifies reasoning about code, by avoiding mutability. Reasoning about code matters for at least two reasons:</p>
+<p> * Quality: If we can reason about the code, we can be more confident that it actually does what we intend it to do.</p>
+<p> * Maintainability: If we can reason about code, it can be easier to maintain.</p>
+<h1>Pure functions</h1>
+<p>A pure function is essentially a mapping from a set of values to some (other) set of values. Let's start with an example of a very simple, pure function; the identity function:</p>
+<pre>\x -> x</pre>
+<p>This function simply returns its argument. We can give it a name:</p>
+<pre>id = \x -> x</pre>
+<p>If we apply it to a value, the result will be the same value.</p>
+<p>Which of the following are true?</p>
+<div class="test">
+<div id="s1-1" class="stmt">
+<input id="sx1-1" type="checkbox" class="cb"></input>
+<span id="st1-1" class="st">id(1) == 1</span>
+<div id="se1-1" class="expl"></div></div>
+<div id="s1-2" class="stmt">
+<input id="sx1-2" type="checkbox" class="cb"></input>
+<span id="st1-2" class="st">id("Hello") == "Hello"</span>
+<div id="se1-2" class="expl"></div></div>
+<div id="s1-3" class="stmt">
+<input id="sx1-3" type="checkbox" class="cb"></input>
+<span id="st1-3" class="st">id(x) == x</span>
+<div id="se1-3" class="expl">
+<p>Here `x` is a variable, so this statement claims the equation to be true for every possible value of `x`. And by definition it is.</p></div></div>
+<button onclick="submit(1)">Submit</button></div>
+<h2>Types</h2>
+<p>The identity function can also be described by its type:</p>
+<pre>id : a -> a</pre>
+<p>Meaning that `id` is a function from a value of any type (a) to some value of the same type (a). I use a common convention that small letter type names are variables, while big letter type names are actual types (such as Int or Boolean).</p>
+<p>Static types are not a requirement for functional programming, but they will help in understanding what functions do (and do not). They are also a very powerful tool for reasoning as we will see later.</p>
+<p>Which statements are true?</p>
+<div class="test">
+<div id="s2-1" class="stmt">
+<input id="sx2-1" type="checkbox" class="cb"></input>
+<span id="st2-1" class="st">id : c -> c</span>
+<div id="se2-1" class="expl">
+<p>This is true because we can choose any name of the type variable, as long as it is the same on both sides of the arrow.</p></div></div>
+<div id="s2-2" class="stmt">
+<input id="sx2-2" type="checkbox" class="cb"></input>
+<span id="st2-2" class="st">id : a -> b</span>
+<div id="se2-2" class="expl">
+<p>This is not true, because it claims that the `id` function would take a value of any type (a) and produce a new value of any other type (b).</p></div></div>
+<button onclick="submit(2)">Submit</button></div>
+<h2>Equal functions</h2>
+<p>Already we've used equalities to reason about the results of functions (in the first test). But we can also equate functions, by stating that two functions are equal if they always return the same result for equal inputs.</p>
+<p>Which statements are true?</p>
+<div class="test">
+<div id="s3-1" class="stmt">
+<input id="sx3-1" type="checkbox" class="cb"></input>
+<span id="st3-1" class="st">id(x) == id(x)</span>
+<div id="se3-1" class="expl"></div></div>
+<div id="s3-2" class="stmt">
+<input id="sx3-2" type="checkbox" class="cb"></input>
+<span id="st3-2" class="st">id == id</span>
+<div id="se3-2" class="expl">
+<p>This is true, since we can allow us to compare functions if they return the same output for equal inputs, or formally: `f == g`  if and only if `f(x) == g(x)` for all `x`.</p></div></div>
+<div id="s3-3" class="stmt">
+<input id="sx3-3" type="checkbox" class="cb"></input>
+<span id="st3-3" class="st">id(1) == id</span>
+<div id="se3-3" class="expl">
+<p>Nope, `id(1) == 1`.</p></div></div>
+<div id="s3-4" class="stmt">
+<input id="sx3-4" type="checkbox" class="cb"></input>
+<span id="st3-4" class="st">id(id) == id</span>
+<div id="se3-4" class="expl">
+<p>The `id` function will be returned from the call.</p></div></div>
+<button onclick="submit(3)">Submit</button></div></div>
+<p class="next">
+<a href="page-2.html">Next</a></p></body></html>
