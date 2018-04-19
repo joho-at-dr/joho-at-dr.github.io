@@ -145,7 +145,7 @@ map(f >>> g) == map(f) >>> map(g)</pre>
 <pre>map(f >>> g)([1,2]) == [g(f(1)), g(f(1)), g(f(2)), g(f(2))]</pre>
 <p>and</p>
 <pre>(map(f) >>> map(g)) ([1,2])
-   == (map(g)) ([f(1),f(1),f(2),f(2)])
+   == map(g) ([f(1),f(1),f(2),f(2)])
    == [g(f(1)), g(f(1)), g(f(2)), g(f(2))]</pre></div></div>
 <button onclick="submit(2)">Submit</button></div></div>
 <p class="next">
